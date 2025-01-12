@@ -27,3 +27,5 @@ let user1={}
 user1.id=11
 user1.name="Mickey"
 console.log(user1)
+let message = "Hino, Mickey, Zenobia"
+console.log(message)
