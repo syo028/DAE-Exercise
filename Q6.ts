@@ -1,3 +1,29 @@
+// Define types for the objects used
+type Item = {
+    name: string;
+    item: string;
+    price: number;
+  };
+  
+  type Info = {
+    name: string;
+    date: string;
+    place: string;
+  };
+  
+  type NameList = {
+    [key: string]: number;
+  };
+  
+  // Define initial information and data
+  let info: Info = {
+    name: "聚餐分帳計算器",
+    date: "2024/03/21",
+    place: "Hong Kong",
+  };
+  
+  let items: Item[] = [];
+  
 let info = {
     name: "聚餐分帳計算器",
     date: '2024/03/21',
