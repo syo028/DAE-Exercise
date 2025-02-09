@@ -74,3 +74,46 @@ function calTip(total: number, tipPercentage: number): number {
   
     const roundedNameList: NameList = {};
     let totalRounded = 0;
+
+     // Round individual amounts and ensure they add up correctly
+  for (let name in nameList) {
+    const individualAmount =
+      (nameList[name] / total) * totalWithTip;
+    const roundedAmount = parseFloat(individualAmount.toFixed(1));
+    roundedNameList[name] = roundedAmount;
+    totalRounded += roundedAmount;
+  }
+
+  // Adjust for rounding errors
+  const roundingError = parseFloat(totalWithTip.toFixed(1)) - totalRounded;
+
+  if (Math.abs(roundingError) > 0.01) {
+    // Distribute rounding error to the first person
+    const firstPerson = Object.keys(roundedNameList)[0];
+    if (firstPerson) {
+      roundedNameList[firstPerson] += roundingError;
+    }
+  }
+
+  console.log("Individual Payments:");
+  for (let name in roundedNameList) {
+    console.log(`${name} needs to pay (in HKD): ${roundedNameList[name].toFixed(1)}`);
+  }
+
+  return roundedNameList;
+}
+
+// Show all items in the list
+function showItems(): void {
+  console.log("==================================");
+  console.log("RECORD");
+  for (let item of items) {
+    console.log(
+      "name:",
+      item.name + ", item:",
+      item.item + ", price (in HKD):",
+      item.price.toFixed(2)
+    );
+  }
+  console.log("==================================");
+}
