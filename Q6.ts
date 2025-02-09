@@ -47,3 +47,30 @@ let info: Info = {
     console.log("Total (in HKD): " + total.toFixed(2));
     return parseFloat(total.toFixed(2));
   }
+  // Calculate the total tip based on a percentage
+function calTip(total: number, tipPercentage: number): number {
+    const tip = (total * tipPercentage) / 100;
+    console.log(`Tip (in HKD): ${tip.toFixed(2)}`);
+    return parseFloat(tip.toFixed(2));
+  }
+  
+  // Calculate the split amounts per person
+  function calSplit(tipPercentage: number): NameList {
+    let nameList: NameList = {};
+  
+    for (let item of items) {
+      if (!nameList[item.name]) {
+        nameList[item.name] = item.price;
+      } else {
+        nameList[item.name] += item.price;
+      }
+    }
+  
+    const total = calTotal();
+    const tip = calTip(total, tipPercentage);
+    const totalWithTip = total + tip;
+  
+    console.log(`Total with Tip (in HKD): ${totalWithTip.toFixed(2)}`);
+  
+    const roundedNameList: NameList = {};
+    let totalRounded = 0;
