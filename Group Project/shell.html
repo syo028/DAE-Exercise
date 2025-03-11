@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <nav>
+      <button data-page="settings">Settings</button>
+      <button data-page="profile">Profile</button>
+    </nav>
+
+    <main id="pageContainer"></main>
+    <script>
+      window.addEventListener("click", async (event) => {
+        let page = event.target.dataset.page;
+        if(page){
+            let res= await fetch('pages/' + page+'.html')
+            let text =await res.text()
+            console.log(text)
+            pageContainer.innerHTML = text
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,4 +1,22 @@
-type TestInput = {
+程式編寫基礎
+// Define types for the objects used
+type Item = {
+    name: string;
+    item: string;
+    price: number;
+  };
+  
+  type Info = {
+    name: string;
+    date: string;
+    place: string;
+  };
+  
+  type NameList = {
+    [key: string]: number; // Keys are names (strings), values are amounts (numbers)
+  };
+  
+  type TestInput = {
     date: string;
     location: string;
     tipPercentage: number;
@@ -6,7 +24,7 @@ type TestInput = {
       price: number;
       name: string;
       isShared: boolean;
-      person?: string; // Optional, only for non-shared items
+      person?: string; // Optional, only needed for non-shared items
     }[];
   };
   
@@ -20,56 +38,72 @@ type TestInput = {
       name: string;
       amount: number;
     }[];
-  };
+  }
   
+  // Process test input and calculate the output
   function processInput(input: TestInput): TestOutput {
     const { date, location, tipPercentage, items } = input;
   
+    // Step 1: Calculate subtotal and prepare name list
     let subTotal = 0;
-    const nameList: { [key: string]: number } = {};
-    const sharedParticipants: Set<string> = new Set();
+    const nameList: NameList = {};
     let sharedTotal = 0;
+    let sharedParticipants: string[] = [];
   
-    // Step 1: 計算小計並追蹤均分參與者
     for (const item of items) {
       subTotal += item.price;
   
+      // Handle shared items
       if (item.isShared) {
         sharedTotal += item.price;
-        if (item.person) {
-          sharedParticipants.add(item.person); // 添加均分參與者
+        // Collect participants from shared items
+        if (!sharedParticipants.includes(item.name)) {
+          sharedParticipants.push(item.name);
         }
-      } else if (item.person) {
-        // 處理個人項目
-        nameList[item.person] = (nameList[item.person] || 0) + item.price;
+      } else {
+        // Handle individual items
+        if (item.person) {
+          if (!nameList[item.person]) {
+            nameList[item.person] = item.price;
+          } else {
+            nameList[item.person] += item.price;
+          }
+        }
       }
     }
   
-    // Step 2: 平均分配均分項目的費用
+    //Distribute shared items equally
     const sharedAmountPerPerson =
-      sharedParticipants.size > 0 ? sharedTotal / sharedParticipants.size : 0;
+      sharedParticipants.length > 0
+        ? sharedTotal / sharedParticipants.length
+        : 0;
+  
     for (const person of sharedParticipants) {
-      nameList[person] = (nameList[person] || 0) + sharedAmountPerPerson;
+      if (!nameList[person]) {
+        nameList[person] = sharedAmountPerPerson;
+      } else {
+        nameList[person] += sharedAmountPerPerson;
+      }
     }
   
-    // Step 3: 計算小費和總金額
+    // Calculate tip and total amount
     const tip = (subTotal * tipPercentage) / 100;
     const totalAmount = subTotal + tip;
   
-    // Step 4: 按比例分配小費並處理舍入
-    const roundedNameList: { [key: string]: number } = {};
+    // Distribute rounding errors
+    const roundedNameList: NameList = {};
     let totalRounded = 0;
   
     for (const name in nameList) {
-      const amountWithTip = nameList[name] + (nameList[name] / subTotal) * tip;
-      const roundedAmount = parseFloat(amountWithTip.toFixed(1));
+      const amount = nameList[name] + (nameList[name] / subTotal) * tip;
+      const roundedAmount = parseFloat(amount.toFixed(1));
       roundedNameList[name] = roundedAmount;
       totalRounded += roundedAmount;
     }
   
     const roundingError = parseFloat(totalAmount.toFixed(1)) - totalRounded;
   
-    // 調整舍入誤差給第一個人
+    // Adjust rounding error to the first person
     if (Math.abs(roundingError) > 0.01) {
       const firstPerson = Object.keys(roundedNameList)[0];
       if (firstPerson) {
@@ -77,14 +111,14 @@ type TestInput = {
       }
     }
   
-    // Step 5: 構建輸出
-    const outputItems = Object.entries(roundedNameList).map(([name, amount]) => ({
+    // Prepare output
+    const outputItems = Object.keys(roundedNameList).map((name) => ({
       name,
-      amount,
+      amount: roundedNameList[name],
     }));
   
     return {
-      date: date.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1年$2月$3日"), // 格式化日期
+      date: date.replace(/-/g, "年").replace("-", "月") + "日",
       location,
       subTotal: parseFloat(subTotal.toFixed(2)),
       tip: parseFloat(tip.toFixed(2)),
@@ -92,11 +126,10 @@ type TestInput = {
       items: outputItems,
     };
   }
-  
-  // 測試函數
   function runTests() {
     console.log("Running Tests...");
   
+    // 測試案例 1：無舍入誤差
     const input1: TestInput = {
       date: "2024-03-21",
       location: "開心小館",
@@ -108,7 +141,7 @@ type TestInput = {
       ],
     };
     const expectedOutput1: TestOutput = {
-      date: "2024年03月21日",
+      date: "2024年3月21日",
       location: "開心小館",
       subTotal: 100,
       tip: 10,
@@ -126,6 +159,7 @@ type TestInput = {
       )}, got ${JSON.stringify(result1)}`
     );
   
+    // 測試案例 2：有舍入誤差，向下調整 0.1 元
     const input2: TestInput = {
       date: "2024-03-21",
       location: "開心小館",
@@ -139,7 +173,7 @@ type TestInput = {
       ],
     };
     const expectedOutput2: TestOutput = {
-      date: "2024年03月21日",
+      date: "2024年3月21日",
       location: "開心小館",
       subTotal: 237,
       tip: 23.7,
@@ -158,6 +192,7 @@ type TestInput = {
       )}, got ${JSON.stringify(result2)}`
     );
   
+    // 測試案例 3：有舍入誤差，向上調整 0.1 元
     const input3: TestInput = {
       date: "2024-03-21",
       location: "開心小館",
@@ -170,7 +205,7 @@ type TestInput = {
       ],
     };
     const expectedOutput3: TestOutput = {
-      date: "2024年03月21日",
+      date: "2024年3月21日",
       location: "開心小館",
       subTotal: 224,
       tip: 22.4,
@@ -191,5 +226,5 @@ type TestInput = {
   
     console.log("All test cases passed!");
   }
-  
-  runTests();
+
+  runTests()

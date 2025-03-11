@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dragonote | Social Platform</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      :root {
+        --primary-neon: #0ff;
+        --secondary-neon: #f0f;
+        --bg-dark: #0a0a0f;
+        --bg-card: rgba(16, 16, 26, 0.8);
+        --text-primary: #fff;
+        --text-secondary: #8a8a8a;
+        --accent-1: #ff3e3e;
+        --accent-2: #4dff4d;
+        --accent-3: #f7b500;
+      }
+
+      body {
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Cyberpunk Background Effect */
+      .cyber-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(45deg, #0a0a0f 25%, transparent 25%),
+          linear-gradient(-45deg, #0a0a0f 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #0a0a0f 75%),
+          linear-gradient(-45deg, transparent 75%, #0a0a0f 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      }
+
+      .cyber-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(15, 255, 255, 0.1) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(15, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: -1;
+      }
+
+      /* Main App Container */
+      .app-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 20px 20px;
+        display: flex;
+        gap: 20px;
+      }
+
+      /* Navigation Bar */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 10, 15, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 10px 0;
+        z-index: 100;
+        border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+      }
+
+      .navbar-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo i {
+        font-size: 2rem;
+        color: var(--primary-neon);
+      }
+
+      .logo span {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--text-primary);
+        letter-spacing: 2px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+        cursor: pointer;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--primary-neon);
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .nav-action {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .nav-action:hover {
+        color: var(--primary-neon);
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--accent-1);
+        color: var(--text-primary);
+        font-size: 0.7rem;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-dropdown {
+        position: relative;
+      }
+
+      .profile-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        border: 1px solid var(--primary-neon);
+        cursor: pointer;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        position: sticky;
+        top: 80px;
+        height: calc(100vh - 100px);
+      }
+
+      .sidebar-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(15, 255, 255, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .sidebar-heading {
+        color: var(--primary-neon);
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .menu-list {
+        list-style: none;
+      }
+
+      .menu-item {
+        margin-bottom: 10px;
+      }
+
+      .menu-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-secondary);
+        padding: 8px 10px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .menu-link:hover,
+      .menu-link.active {
+        background: rgba(15, 255, 255, 0.1);
+        color: var(--primary-neon);
+      }
+
+      .menu-link i {
+        font-size: 1.2rem;
+      }
+
+      /* Content Views */
+      .content-view {
+        display: none;
+      }
+
+      .content-view.active {
+        display: block;
+        animation: fadeIn 0.3s forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Right Sidebar */
+      .right-sidebar {
+        width: 300px;
+        position: sticky;
+        top: 80px;
+        height: calc(100vh - 100px);
+      }
+
+      /* Trending Topics */
+      .trending-topic {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+      }
+
+      .trending-topic:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .trending-info {
+        flex: 1;
+      }
+
+      .trending-category {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+      }
+
+      .trending-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .trending-stats {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+
+      .trending-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-left: 10px;
+      }
+
+      /* Suggested Users */
+      .suggested-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+      }
+
+      .suggested-user:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .suggested-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--primary-neon);
+      }
+
+      .suggested-info {
+        flex: 1;
+      }
+
+      .suggested-name {
+        font-weight: bold;
+        margin-bottom: 3px;
+      }
+
+      .suggested-username {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+
+      .follow-btn {
+        background: transparent;
+        border: 1px solid var(--primary-neon);
+        color: var(--primary-neon);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .follow-btn:hover {
+        background: var(--primary-neon);
+        color: var(--bg-dark);
+      }
+
+      
+
+      /* Bookmarks View */
+      .bookmark-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .bookmark-tabs {
+        display: flex;
+        gap: 10px;
+      }
+
+      .bookmark-tab {
+        padding: 8px 15px;
+        border-radius: 20px;
+        background: rgba(15, 255, 255, 0.1);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .bookmark-tab.active {
+        background: var(--primary-neon);
+        color: var(--bg-dark);
+      }
+
+      .bookmark-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 8px 15px;
+      }
+
+      .bookmark-search input {
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+      }
+
+      .bookmark-search input:focus {
+        outline: none;
+      }
+
+      /* Profile View */
+      .profile-header {
+        position: relative;
+        margin-bottom: 70px;
+      }
+
+      .profile-cover {
+        width: 100%;
+        height: 200px;
+        border-radius: 15px;
+        object-fit: cover;
+      }
+
+      .profile-info {
+        position: absolute;
+        bottom: -60px;
+        left: 20px;
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+      }
+
+      .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid var(--bg-dark);
+        box-shadow: 0 0 0 2px var(--primary-neon);
+      }
+
+      .profile-details {
+        margin-bottom: 10px;
+      }
+
+      .profile-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .profile-username {
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+      }
+
+      .profile-stats {
+        display: flex;
+        gap: 20px;
+      }
+
+      .profile-stat {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .profile-stat-count {
+        font-weight: bold;
+      }
+
+      .profile-stat-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .profile-actions {
+        position: absolute;
+        bottom: -60px;
+        right: 20px;
+      }
+
+      .profile-action-btn {
+        background: transparent;
+        border: 1px solid var(--primary-neon);
+        color: var(--primary-neon);
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .profile-action-btn:hover {
+        background: var(--primary-neon);
+        color: var(--bg-dark);
+      }
+
+      .profile-tabs {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+        padding-bottom: 15px;
+      }
+
+      .profile-tab {
+        padding: 8px 15px;
+        border-radius: 20px;
+        background: rgba(15, 255, 255, 0.1);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .profile-tab.active {
+        background: var(--primary-neon);
+        color: var(--bg-dark);
+      }
+
+      /* Settings View */
+      .settings-section {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(15, 255, 255, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .settings-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+      }
+
+      .settings-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .settings-form {
+        display: grid;
+        gap: 20px;
+      }
+
+      .settings-group {
+        display: grid;
+        gap: 10px;
+      }
+
+      .settings-label {
+        color: var(--text-secondary);
+      }
+
+      .settings-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(15, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 10px 15px;
+        color: var(--text-primary);
+      }
+
+      .settings-input:focus {
+        outline: none;
+        border-color: var(--primary-neon);
+      }
+
+      .settings-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 24px;
+      }
+
+      .toggle-input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.1);
+        transition: 0.4s;
+        border-radius: 24px;
+      }
+
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: var(--text-primary);
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      .toggle-input:checked + .toggle-slider {
+        background-color: var(--primary-neon);
+      }
+
+      .toggle-input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+      }
+
+      /* Topic Views */
+      .topic-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(15, 255, 255, 0.1);
+        padding: 20px;
+      }
+
+      .topic-icon {
+        font-size: 2rem;
+        color: var(--primary-neon);
+      }
+
+      .topic-info {
+        flex: 1;
+      }
+
+      .topic-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .topic-description {
+        color: var(--text-secondary);
+      }
+
+      .topic-action {
+        background: rgba(15, 255, 255, 0.1);
+        border: 1px solid var(--primary-neon);
+        color: var(--primary-neon);
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .topic-action:hover {
+        background: var(--primary-neon);
+        color: var(--bg-dark);
+      }
+
+      /* Animations */
+      @keyframes neonPulse {
+        0%,
+        100% {
+          text-shadow: 0 0 5px var(--primary-neon), 0 0 10px var(--primary-neon);
+        }
+        50% {
+          text-shadow: 0 0 15px var(--primary-neon),
+            0 0 20px var(--primary-neon);
+        }
+      }
+
+      .neon-text {
+        color: var(--primary-neon);
+        animation: neonPulse 2s infinite;
+      }
+
+      /* App Navigation */
+      .app-nav {
+        display: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 1100px) {
+        .right-sidebar {
+          display: none;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          display: none;
+        }
+
+        .app-nav {
+          display: flex;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          background: rgba(10, 10, 15, 0.9);
+          backdrop-filter: blur(10px);
+          padding: 10px 0;
+          border-top: 1px solid rgba(15, 255, 255, 0.1);
+          z-index: 100;
+        }
+
+        .app-nav-list {
+          display: flex;
+          justify-content: space-around;
+          width: 100%;
+          list-style: none;
+        }
+
+        .app-nav-item {
+          text-align: center;
+        }
+
+        .app-nav-link {
+          color: var(--text-secondary);
+          font-size: 1.5rem;
+          transition: color 0.3s ease;
+        }
+
+        .app-nav-link:hover,
+        .app-nav-link.active {
+          color: var(--primary-neon);
+        }
+
+        .app-container {
+          padding-bottom: 70px;
+        }
+
+        .messages-container {
+          flex-direction: column;
+          height: auto;
+        }
+
+        .messages-sidebar {
+          width: 100%;
+          max-height: 300px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .post-actions {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .post-attachments {
+          justify-content: space-between;
+        }
+
+        .profile-info {
+          flex-direction: column;
+          align-items: center;
+          bottom: -100px;
+          left: 0;
+          right: 0;
+        }
+
+        .profile-actions {
+          position: relative;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+        }
+
+        .profile-header {
+          margin-bottom: 130px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cyber-background"></div>
+    <div class="cyber-grid"></div>
+
+    <!-- Main App -->
+    <div id="main-app">
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <div class="navbar-container">
+          <div class="logo">
+            <i class="bx bxs-dragon"></i>
+            <span class="neon-text">DRAGONOTE</span>
+          </div>
+
+          <div class="nav-links">
+            <i class="bx bx-home-alt nav-link active" data-view="feed"></i>
+            <i class="bx bx-compass nav-link" data-view="explore"></i>
+            <i
+              class="bx bx-message-square-detail nav-link"
+              data-view="messages"
+            ></i>
+          </div>
+
+          <div class="nav-actions">
+            <div class="nav-action">
+              <i class="bx bx-search"></i>
+            </div>
+            <div class="nav-action" data-view="notifications">
+             
+        </div>
+      </nav>
+
+      <!-- App Container -->
+      <div class="app-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-card">
+            <h3 class="sidebar-heading">Menu</h3>
+            <ul class="menu-list">
+              <li class="menu-item">
+                <a class="menu-link active" data-view="feed">
+                  <i class="bx bx-home-alt"></i>
+                  <span>Feed</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="explore">
+                  <i class="bx bx-compass"></i>
+                  <span>Explore</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="messages">
+                  <i class="bx bx-message-square-detail"></i>
+                  <span>Messages</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="notifications">
+                  <i class="bx bx-bell"></i>
+                  <span>Notifications</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="bookmarks">
+                  <i class="bx bx-bookmark"></i>
+                  <span>Bookmarks</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="profile">
+                  <i class="bx bx-user"></i>
+                  <span>Profile</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="settings">
+                  <i class="bx bx-cog"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card">
+            <h3 class="sidebar-heading">Your Topics</h3>
+            <ul class="menu-list">
+              <li class="menu-item">
+                <a class="menu-link" data-view="topic-cyberpunk">
+                  <i class="bx bx-chip"></i>
+                  <span>Cyberpunk</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="topic-technology">
+                  <i class="bx bx-code-alt"></i>
+                  <span>Technology</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="topic-gaming">
+                  <i class="bx bx-joystick"></i>
+                  <span>Gaming</span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" data-view="topic-art">
+                  <i class="bx bx-palette"></i>
+                  <span>Art & Design</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+          <!-- Feed View -->
+          <div class="content-view active" id="feed"></div>
+
+          <!-- Explore View -->
+          <div class="content-view" id="explore"></div>
+
+          <!-- Messages View -->
+          <div class="content-view" id="messages"></div>
+
+          <!-- Notifications View -->
+          <div class="content-view" id="notifications">
+            <h2 style="margin-bottom: 20px; color: var(--primary-neon)">
+              Notifications
+            </h2>
+
+            <div class="notification-item unread">
+              <img
+                src="https://picsum.photos/200/200?random=13"
+                alt="User"
+                class="notification-avatar"
+              />
+              <div class="notification-content">
+                <div class="notification-text">
+                  <b>Cyber Witch</b> mentioned you in a comment: "Hey
+                  <b>@You</b>, what do you think about this neural mod?"
+                </div>
+                <div class="notification-time">10 minutes ago</div>
+              </div>
+              <div class="notification-action">
+                <i class="bx bx-dots-horizontal-rounded"></i>
+              </div>
+            </div>
+
+            <div class="notification-item unread">
+              <img
+                src="https://picsum.photos/200/200?random=14"
+                alt="User"
+                class="notification-avatar"
+              />
+              <div class="notification-content">
+                <div class="notification-text">
+                  <b>NeoRunner</b> liked your post: "Just upgraded my neural
+                  interface..."
+                </div>
+                <div class="notification-time">1 hour ago</div>
+              </div>
+              <div class="notification-action">
+                <i class="bx bx-dots-horizontal-rounded"></i>
+              </div>
+            </div>
+
+            <div class="notification-item unread">
+              <img
+                src="https://picsum.photos/200/200?random=15"
+                alt="User"
+                class="notification-avatar"
+              />
+              <div class="notification-content">
+                <div class="notification-text">
+                  <b>TechNomad</b> started following you
+                </div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+              <div class="notification-action">
+                <button class="follow-btn">Follow</button>
+              </div>
+            </div>
+
+            <div class="notification-item">
+              <img
+                src="https://picsum.photos/200/200?random=16"
+                alt="User"
+                class="notification-avatar"
+              />
+              <div class="notification-content">
+                <div class="notification-text">
+                  <b>DigitalArtist</b> shared your post: "Check out this
+                  cyberpunk artwork..."
+                </div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+              <div class="notification-action">
+                <i class="bx bx-dots-horizontal-rounded"></i>
+              </div>
+            </div>
+
+            <div class="notification-item">
+              <img
+                src="https://picsum.photos/200/200?random=17"
+                alt="User"
+                class="notification-avatar"
+              />
+              <div class="notification-content">
+                <div class="notification-text">
+                  Your post reached <b>100 likes</b>!
+                </div>
+                <div class="notification-time">2 days ago</div>
+              </div>
+              <div class="notification-action">
+                <i class="bx bx-dots-horizontal-rounded"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bookmarks View -->
+          <div class="content-view" id="bookmarks">
+            <h2 style="margin-bottom: 20px; color: var(--primary-neon)">
+              Bookmarks
+            </h2>
+
+            <div class="bookmark-controls">
+              <div class="bookmark-tabs">
+                <div class="bookmark-tab active">All</div>
+                <div class="bookmark-tab">Posts</div>
+                <div class="bookmark-tab">Articles</div>
+                <div class="bookmark-tab">Media</div>
+              </div>
+
+              <div class="bookmark-search">
+                <i class="bx bx-search"></i>
+                <input type="text" placeholder="Search bookmarks" />
+              </div>
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=18"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">Neural_Network</div>
+                  <div class="post-time">Bookmarked 3 days ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Tutorial: How to optimize your neural interface for maximum
+                bandwidth without overheating. A deep dive into cooling systems
+                and data compression. #Tutorial #CyberTech
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=5"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=19"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">CyberCode</div>
+                  <div class="post-time">Bookmarked 1 week ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Breaking: New legislation on cybernetic augmentations just
+                passed. Here's what you need to know about the regulations and
+                how they affect your implants. #CyberLaw #Augmentation
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile View -->
+          <div class="content-view" id="profile"></div>
+
+          <!-- Settings View -->
+          <div class="content-view" id="settings"></div>
+
+          <!-- Topic Views -->
+          <div class="content-view" id="topic-cyberpunk">
+            <div class="topic-header">
+              <i class="bx bx-chip topic-icon"></i>
+              <div class="topic-info">
+                <div class="topic-title">Cyberpunk</div>
+                <div class="topic-description">
+                  High tech, low life. Explore the world of cybernetic
+                  enhancements, digital rebellion, and neon-lit dystopias.
+                </div>
+              </div>
+              <button class="topic-action">Following</button>
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=21"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">CyberPunk2077</div>
+                  <div class="post-time">5 hours ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                "The sky above the port was the color of television, tuned to a
+                dead channel." - William Gibson #Neuromancer #Cyberpunk
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=7"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=22"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">NeonBlade</div>
+                  <div class="post-time">Yesterday</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Just got this cybernetic arm tattoo. The circuits light up with
+                embedded LEDs powered by body heat. #CyberMod #BodyArt
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=8"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+          </div>
+
+          <div class="content-view" id="topic-technology">
+            <div class="topic-header">
+              <i class="bx bx-code-alt topic-icon"></i>
+              <div class="topic-info">
+                <div class="topic-title">Technology</div>
+                <div class="topic-description">
+                  The latest in tech innovation, from neural interfaces to
+                  quantum computing and beyond.
+                </div>
+              </div>
+              <button class="topic-action">Following</button>
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=23"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">QuantumCoder</div>
+                  <div class="post-time">3 hours ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Breaking: Scientists achieve quantum supremacy with a 1000-qubit
+                processor. The implications for neural interface technology are
+                mind-blowing. #QuantumComputing #Tech
+              </div>
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=24"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">TechGuru</div>
+                  <div class="post-time">Yesterday</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Review: The new NeuraLink X300 implant. Is it worth the upgrade?
+                I've been testing it for a week and here are my thoughts.
+                #NeuraLink #Review
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=9"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+          </div>
+
+          <div class="content-view" id="topic-gaming">
+            <div class="topic-header">
+              <i class="bx bx-joystick topic-icon"></i>
+              <div class="topic-info">
+                <div class="topic-title">Gaming</div>
+                <div class="topic-description">
+                  From VR to neural-link gaming, explore the cutting edge of
+                  interactive entertainment.
+                </div>
+              </div>
+              <button class="topic-action">Following</button>
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=25"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">GameDev_Neo</div>
+                  <div class="post-time">4 hours ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                First look at NeuroDive - the first full immersion neural game.
+                The sensory feedback is incredible. #NeuralGaming #GameDev
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=10"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=26"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">CyberGamer</div>
+                  <div class="post-time">2 days ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Just hit max level in NightCity Online. My netrunner build is
+                unstoppable! Who wants to raid the corporate server tonight?
+                #NCO #Gaming
+              </div>
+            </div>
+          </div>
+
+          <div class="content-view" id="topic-art">
+            <div class="topic-header">
+              <i class="bx bx-palette topic-icon"></i>
+              <div class="topic-info">
+                <div class="topic-title">Art & Design</div>
+                <div class="topic-description">
+                  Digital art, augmented reality installations, and
+                  neural-enhanced creativity.
+                </div>
+              </div>
+              <button class="topic-action">Following</button>
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=27"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">NeuralArtist</div>
+                  <div class="post-time">6 hours ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                My latest AR installation is now live at Central Plaza. It
+                responds to the collective neural activity of viewers to create
+                evolving patterns. #ARart #NeuroArt
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=11"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+
+            <div class="post">
+              <div class="post-header">
+                <img
+                  src="https://picsum.photos/200/200?random=28"
+                  alt="User"
+                  class="post-avatar"
+                />
+                <div class="post-user-info">
+                  <div class="post-username">DigitalSculptor</div>
+                  <div class="post-time">3 days ago</div>
+                </div>
+                <div class="post-more">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
+              </div>
+              <div class="post-content">
+                Tutorial: How to use neural feedback to enhance your digital art
+                creation. The mind-to-canvas technique is revolutionary!
+                #DigitalArt #Tutorial
+              </div>
+              <img
+                src="https://picsum.photos/800/400?random=12"
+                alt="Post Image"
+                class="post-image"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+          <!-- Trending Topics -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-heading">Trending Topics</h3>
+
+            <div class="trending-topic">
+              <div class="trending-info">
+                <div class="trending-category">Technology</div>
+                <div class="trending-title">Neural Interface 2.0</div>
+                <div class="trending-stats">5.2K posts</div>
+              </div>
+              <img
+                src="https://picsum.photos/100/100?random=10"
+                alt="Trending"
+                class="trending-image"
+              />
+            </div>
+
+            <div class="trending-topic">
+              <div class="trending-info">
+                <div class="trending-category">Cyberpunk</div>
+                <div class="trending-title">Night City Riots</div>
+                <div class="trending-stats">3.8K posts</div>
+              </div>
+              <img
+                src="https://picsum.photos/100/100?random=11"
+                alt="Trending"
+                class="trending-image"
+              />
+            </div>
+
+            <div class="trending-topic">
+              <div class="trending-info">
+                <div class="trending-category">Gaming</div>
+                <div class="trending-title">Cybernetic Warfare</div>
+                <div class="trending-stats">2.5K posts</div>
+              </div>
+              <img
+                src="https://picsum.photos/100/100?random=12"
+                alt="Trending"
+                class="trending-image"
+              />
+            </div>
+          </div>
+
+          <!-- Suggested Users -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-heading">Suggested Users</h3>
+
+            <div class="suggested-user">
+              <img
+                src="https://picsum.photos/200/200?random=7"
+                alt="User"
+                class="suggested-avatar"
+              />
+              <div class="suggested-info">
+                <div class="suggested-name">Neon Rider</div>
+                <div class="suggested-username">@neon_rider</div>
+              </div>
+              <button class="follow-btn">Follow</button>
+            </div>
+
+            <div class="suggested-user">
+              <img
+                src="https://picsum.photos/200/200?random=8"
+                alt="User"
+                class="suggested-avatar"
+              />
+              <div class="suggested-info">
+                <div class="suggested-name">Cyber Witch</div>
+                <div class="suggested-username">@cyber_witch</div>
+              </div>
+              <button class="follow-btn">Follow</button>
+            </div>
+
+            <div class="suggested-user">
+              <img
+                src="https://picsum.photos/200/200?random=9"
+                alt="User"
+                class="suggested-avatar"
+              />
+              <div class="suggested-info">
+                <div class="suggested-name">Digital Nomad</div>
+                <div class="suggested-username">@digi_nomad</div>
+              </div>
+              <button class="follow-btn">Follow</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <nav class="app-nav">
+        <ul class="app-nav-list">
+          <li class="app-nav-item">
+            <i class="bx bx-home-alt app-nav-link active" data-view="feed"></i>
+          </li>
+          <li class="app-nav-item">
+            <i class="bx bx-compass app-nav-link" data-view="explore"></i>
+          </li>
+          <li class="app-nav-item">
+            <i
+              class="bx bx-message-square-detail app-nav-link"
+              data-view="messages"
+            ></i>
+          </li>
+          <li class="app-nav-item">
+            <i class="bx bx-bell app-nav-link" data-view="notifications"></i>
+          </li>
+          <li class="app-nav-item">
+            <i class="bx bx-user app-nav-link" data-view="profile"></i>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal-overlay"></div>
+    <div class="share-modal">
+      <div class="share-header">
+        <h3 class="neon-text">Share Post</h3>
+        <i class="bx bx-x close-modal" style="cursor: pointer"></i>
+      </div>
+      <div class="share-options">
+        <div class="share-option">
+          <i class="bx bxl-twitter"></i>
+          <span>Twitter</span>
+        </div>
+        <div class="share-option">
+          <i class="bx bxl-facebook"></i>
+          <span>Facebook</span>
+        </div>
+        <div class="share-option">
+          <i class="bx bxl-linkedin"></i>
+          <span>LinkedIn</span>
+        </div>
+        <div class="share-option">
+          <i class="bx bxl-whatsapp"></i>
+          <span>WhatsApp</span>
+        </div>
+      </div>
+      <div class="share-link">
+        <input type="text" value="https://dragonote.com/post/123" readonly />
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <script>
+      // View Navigation System
+      document.addEventListener("click", function (e) {
+        // Handle navigation link clicks
+        const navLink = e.target.closest("[data-view]");
+        if (navLink) {
+          const viewId = navLink.getAttribute("data-view");
+          showView(viewId);
+
+          // Update active states
+          document
+            .querySelectorAll(".nav-link, .app-nav-link, .menu-link")
+            .forEach((link) => {
+              if (link.getAttribute("data-view") === viewId) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+        }
+      });
+
+      async function showView(viewId) {
+        // Hide all views
+        document.querySelectorAll(".content-view").forEach((view) => {
+          view.classList.remove("active");
+        });
+
+        // Show the selected view
+        const selectedView = document.getElementById(viewId);
+        if (selectedView) {
+          // selectedView.innerHTML = "loading;";
+          let res = await fetch(`pages/${viewId}.html`);
+          let text = await res.text();
+          if (!text.includes("Cannot GET")) {
+            selectedView.innerHTML = text;
+            selectedView.querySelectorAll("script").forEach((script) => {
+              let text = script.innerHTML;
+              eval(text);
+            });
+          }
+
+          selectedView.classList.add("active");
+        }
+      }
+
+      // Reaction System - Using event delegation for all posts
+      document.addEventListener("click", function (e) {
+        // Check if the clicked element is a reaction button or one of its children
+        const reactionBtn = e.target.closest(".reaction-btn");
+        if (reactionBtn) {
+          // Toggle active state
+          reactionBtn.classList.toggle("active");
+
+          // Update count
+          let count = parseInt(
+            reactionBtn.querySelector(".reaction-count").textContent
+          );
+          reactionBtn.querySelector(".reaction-count").textContent =
+            reactionBtn.classList.contains("active") ? count + 1 : count - 1;
+
+          // Create floating effect
+          const effect = document.createElement("span");
+          effect.className = "reaction-effect";
+          effect.innerHTML = reactionBtn.querySelector("i").outerHTML;
+          reactionBtn.appendChild(effect);
+
+          // Remove effect after animation
+          setTimeout(() => effect.remove(), 1000);
+        }
+      });
+
+      // Comment System - Using event delegation
+      document.addEventListener("keypress", function (e) {
+        if (e.target.classList.contains("comment-input")) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (e.target.value.trim()) {
+              addComment(e.target);
+              e.target.value = "";
+            }
+          }
+        }
+      });
+
+      function addComment(inputElement) {
+        const content = inputElement.value;
+        const commentsContainer = inputElement
+          .closest(".comments-section")
+          .querySelector(".comments-container");
+
+        const comment = document.createElement("div");
+        comment.className = "comment";
+        comment.innerHTML = `
+                <div class="comment-header">
+                    <img src="https://picsum.photos/200/200?random=1" alt="User" class="comment-avatar">
+                    <span class="comment-user">You</span>
+                    <span class="comment-time">Just now</span>
+                </div>
+                <div class="comment-content">${content}</div>
+                <div class="comment-actions">
+                    <span class="comment-action">Like</span>
+                    <span class="comment-action">Reply</span>
+                    <span class="comment-action">Share</span>
+                </div>
+            `;
+
+        commentsContainer.insertBefore(comment, commentsContainer.firstChild);
+      }
+
+      // Share Modal - Using event delegation
+      document.addEventListener("click", function (e) {
+        // Check if the clicked element is a share button or one of its children
+        const shareBtn = e.target.closest(".post-button-action");
+        if (shareBtn && shareBtn.textContent.trim() === "Share") {
+          toggleShareModal();
+        }
+
+        // Handle modal close button
+        if (e.target.closest(".close-modal")) {
+          toggleShareModal();
+        }
+
+        // Handle modal overlay click
+        if (e.target.classList.contains("modal-overlay")) {
+          toggleShareModal();
+        }
+
+        // Handle share options
+        const shareOption = e.target.closest(".share-option");
+        if (shareOption) {
+          alert("Sharing to " + shareOption.querySelector("span").textContent);
+        }
+
+        // Handle copy button
+        if (e.target.classList.contains("copy-btn")) {
+          const input = document.querySelector(".share-link input");
+          input.select();
+          document.execCommand("copy");
+          e.target.textContent = "Copied!";
+          setTimeout(() => (e.target.textContent = "Copy"), 2000);
+        }
+      });
+
+      function toggleShareModal() {
+        document.querySelector(".share-modal").classList.toggle("active");
+        document.querySelector(".modal-overlay").classList.toggle("active");
+      }
+
+      // Follow buttons
+      document.addEventListener("click", function (e) {
+        const followBtn = e.target.closest(".follow-btn");
+        if (followBtn) {
+          if (followBtn.textContent === "Follow") {
+            followBtn.textContent = "Following";
+            followBtn.style.background = "var(--primary-neon)";
+            followBtn.style.color = "var(--bg-dark)";
+          } else {
+            followBtn.textContent = "Follow";
+            followBtn.style.background = "transparent";
+            followBtn.style.color = "var(--primary-neon)";
+          }
+        }
+      });
+
+      // Bookmark tabs
+      document.addEventListener("click", function (e) {
+        const bookmarkTab = e.target.closest(".bookmark-tab");
+        if (bookmarkTab) {
+          document.querySelectorAll(".bookmark-tab").forEach((tab) => {
+            tab.classList.remove("active");
+          });
+          bookmarkTab.classList.add("active");
+        }
+      });
+
+      // Profile tabs
+      document.addEventListener("click", function (e) {
+        const profileTab = e.target.closest(".profile-tab");
+        if (profileTab) {
+          document.querySelectorAll(".profile-tab").forEach((tab) => {
+            tab.classList.remove("active");
+          });
+          profileTab.classList.add("active");
+        }
+      });
+
+      // Settings toggles
+      document.addEventListener("change", function (e) {
+        if (e.target.classList.contains("toggle-input")) {
+          // Handle toggle changes if needed
+          console.log("Toggle changed:", e.target.checked);
+        }
+      });
+
+      // Topic actions
+      document.addEventListener("click", function (e) {
+        const topicAction = e.target.closest(".topic-action");
+        if (topicAction) {
+          if (topicAction.textContent === "Follow") {
+            topicAction.textContent = "Following";
+            topicAction.style.background = "var(--primary-neon)";
+            topicAction.style.color = "var(--bg-dark)";
+          } else {
+            topicAction.textContent = "Follow";
+            topicAction.style.background = "rgba(15, 255, 255, 0.1)";
+            topicAction.style.color = "var(--primary-neon)";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

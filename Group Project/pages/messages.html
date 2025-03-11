@@ -1,0 +1,359 @@
+<style>
+  /* Messages View */
+  .messages-container {
+    display: flex;
+    height: calc(100vh - 120px);
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(15, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .messages-sidebar {
+    width: 300px;
+    border-right: 1px solid rgba(15, 255, 255, 0.1);
+    overflow-y: auto;
+  }
+
+  .messages-header {
+    padding: 15px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+  }
+
+  .messages-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 8px 15px;
+  }
+
+  .messages-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+  }
+
+  .messages-search input:focus {
+    outline: none;
+  }
+
+  .message-preview {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .message-preview:hover,
+  .message-preview.active {
+    background: rgba(15, 255, 255, 0.1);
+  }
+
+  .message-preview-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-neon);
+  }
+
+  .message-preview-content {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .message-preview-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .message-preview-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .message-preview-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+  }
+
+  .message-preview-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .message-preview-badge {
+    background: var(--primary-neon);
+    color: var(--bg-dark);
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .messages-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .messages-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+  }
+
+  .messages-chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-neon);
+  }
+
+  .messages-chat-info {
+    flex: 1;
+  }
+
+  .messages-chat-name {
+    font-weight: bold;
+  }
+
+  .messages-chat-status {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .messages-chat-actions {
+    display: flex;
+    gap: 15px;
+  }
+
+  .messages-chat-action {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .messages-chat-action:hover {
+    color: var(--primary-neon);
+  }
+
+  .messages-chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .message-bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+  }
+
+  .message-bubble.received {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom-left-radius: 0;
+  }
+
+  .message-bubble.sent {
+    align-self: flex-end;
+    background: rgba(15, 255, 255, 0.2);
+    border-bottom-right-radius: 0;
+  }
+
+  .message-time {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    text-align: right;
+  }
+
+  .messages-chat-footer {
+    padding: 15px;
+    border-top: 1px solid rgba(15, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+  }
+
+  .messages-chat-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: var(--text-primary);
+    resize: none;
+    height: 40px;
+  }
+
+  .messages-chat-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+</style>
+
+<div class="messages-container">
+  <div class="messages-sidebar">
+    <div class="messages-header">
+      <div class="messages-search">
+        <i class="bx bx-search"></i>
+        <input type="text" placeholder="Search messages" />
+      </div>
+    </div>
+
+    <div class="message-preview active">
+      <img
+        src="https://picsum.photos/200/200?random=10"
+        alt="User"
+        class="message-preview-avatar"
+      />
+      <div class="message-preview-content">
+        <div class="message-preview-name">Neon Rider</div>
+        <div class="message-preview-text">
+          Hey, did you check out the new neural interface?
+        </div>
+      </div>
+      <div class="message-preview-info">
+        <div class="message-preview-time">10:45 AM</div>
+        <div class="message-preview-badge">2</div>
+      </div>
+    </div>
+
+    <div class="message-preview">
+      <img
+        src="https://picsum.photos/200/200?random=11"
+        alt="User"
+        class="message-preview-avatar"
+      />
+      <div class="message-preview-content">
+        <div class="message-preview-name">Cyber Witch</div>
+        <div class="message-preview-text">
+          The code you sent works great. Thanks!
+        </div>
+      </div>
+      <div class="message-preview-info">
+        <div class="message-preview-time">Yesterday</div>
+      </div>
+    </div>
+
+    <div class="message-preview">
+      <img
+        src="https://picsum.photos/200/200?random=12"
+        alt="User"
+        class="message-preview-avatar"
+      />
+      <div class="message-preview-content">
+        <div class="message-preview-name">Chrome Edge</div>
+        <div class="message-preview-text">
+          Are we still meeting at The Grid tonight?
+        </div>
+      </div>
+      <div class="message-preview-info">
+        <div class="message-preview-time">2d ago</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="messages-main">
+    <div class="messages-chat-header">
+      <img
+        src="https://picsum.photos/200/200?random=10"
+        alt="User"
+        class="messages-chat-avatar"
+      />
+      <div class="messages-chat-info">
+        <div class="messages-chat-name">Neon Rider</div>
+        <div class="messages-chat-status">Online</div>
+      </div>
+      <div class="messages-chat-actions">
+        <i class="bx bx-phone messages-chat-action"></i>
+        <i class="bx bx-video messages-chat-action"></i>
+        <i class="bx bx-info-circle messages-chat-action"></i>
+      </div>
+    </div>
+
+    <div class="messages-chat-body">
+      <div class="message-bubble received">
+        Hey, did you check out the new neural interface?
+        <div class="message-time">10:30 AM</div>
+      </div>
+
+      <div class="message-bubble received">
+        It's got that quantum processing chip we were talking about.
+        <div class="message-time">10:31 AM</div>
+      </div>
+
+      <div class="message-bubble sent">
+        Not yet! Is it available at CyberMart?
+        <div class="message-time">10:35 AM</div>
+      </div>
+
+      <div class="message-bubble received">
+        Yeah, but they're selling out fast. The transfer rates are insane!
+        <div class="message-time">10:40 AM</div>
+      </div>
+
+      <div class="message-bubble received">
+        Check out this spec sheet: 10TB/s neural bandwidth, 50ms latency.
+        <div class="message-time">10:42 AM</div>
+      </div>
+
+      <div class="message-bubble sent">
+        Wow, that's a game changer. I'll head over there this afternoon.
+        <div class="message-time">10:43 AM</div>
+      </div>
+
+      <div class="message-bubble received">
+        Let me know what you think. Might upgrade mine too.
+        <div class="message-time">10:45 AM</div>
+      </div>
+    </div>
+
+    <div class="messages-chat-footer">
+      <textarea
+        class="messages-chat-input"
+        placeholder="Type a message..."
+      ></textarea>
+      <button class="post-button">
+        <i class="bx bx-send"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Messages interaction
+  document.addEventListener("click", function (e) {
+    const messagePreview = e.target.closest(".message-preview");
+    if (messagePreview) {
+      document.querySelectorAll(".message-preview").forEach((preview) => {
+        preview.classList.remove("active");
+      });
+      messagePreview.classList.add("active");
+    }
+  });
+

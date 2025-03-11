@@ -1,0 +1,764 @@
+<style>
+  /* Main Content */
+  .main-content {
+    flex: 1;
+  }
+
+  /* Create Post */
+  .create-post {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(15, 255, 255, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .post-input-wrapper {
+    display: flex;
+    gap: 15px;
+  }
+
+  .post-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-neon);
+  }
+
+  .post-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 15px;
+    color: var(--text-primary);
+    resize: none;
+    height: 60px;
+  }
+
+  .post-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
+  .post-attachments {
+    display: flex;
+    gap: 15px;
+  }
+
+  .post-attachment {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .post-attachment:hover {
+    background: rgba(15, 255, 255, 0.1);
+    color: var(--primary-neon);
+  }
+
+  .post-button {
+    background: linear-gradient(
+      45deg,
+      var(--primary-neon),
+      var(--secondary-neon)
+    );
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .post-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  /* Post Feed */
+  .post {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(15, 255, 255, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .post-user-info {
+    flex: 1;
+  }
+
+  .post-username {
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+
+  .post-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .post-more {
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .post-more:hover {
+    color: var(--primary-neon);
+  }
+
+  .post-content {
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+
+  .post-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  .post-stats {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .post-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+  }
+
+  .post-button-action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+
+  .post-button-action:hover {
+    background: rgba(15, 255, 255, 0.1);
+    color: var(--primary-neon);
+  }
+
+  /* Reaction System Styles */
+  .reaction-panel {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(16, 16, 26, 0.9);
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+
+  .reaction-btn {
+    position: relative;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: rgba(15, 255, 255, 0.1);
+    border: 1px solid var(--primary-neon);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .reaction-btn:hover {
+    background: rgba(15, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .reaction-btn.active {
+    background: var(--primary-neon);
+    color: var(--bg-dark);
+  }
+
+  .reaction-count {
+    font-size: 0.8rem;
+    margin-left: 5px;
+  }
+
+  /* Reaction Animation */
+  .reaction-effect {
+    position: absolute;
+    pointer-events: none;
+    animation: floatUp 1s forwards;
+    opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+  }
+
+  /* Comments Section */
+  .comments-section {
+    background: rgba(16, 16, 26, 0.8);
+    border-radius: 10px;
+    margin-top: 15px;
+    border: 1px solid rgba(15, 255, 255, 0.1);
+  }
+
+  .comment-input-wrapper {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+  }
+
+  .comment-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: var(--text-primary);
+    resize: none;
+    height: 40px;
+  }
+
+  .comment-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .comment {
+    padding: 15px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .comment:hover {
+    background: rgba(15, 255, 255, 0.05);
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .comment-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-neon);
+  }
+
+  .comment-user {
+    font-weight: bold;
+    color: var(--primary-neon);
+  }
+
+  .comment-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .comment-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }
+
+  .comment-action {
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .comment-action:hover {
+    color: var(--primary-neon);
+  }
+
+  /* Share Modal */
+  .share-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--primary-neon);
+    z-index: 1000;
+    display: none;
+    backdrop-filter: blur(10px);
+    min-width: 300px;
+  }
+
+  .share-modal.active {
+    display: block;
+    animation: modalFadeIn 0.3s ease;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+    display: none;
+  }
+
+  .modal-overlay.active {
+    display: block;
+  }
+
+  .share-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(15, 255, 255, 0.1);
+  }
+
+  .share-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .share-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(15, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .share-option:hover {
+    background: rgba(15, 255, 255, 0.2);
+  }
+
+  .share-link {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(15, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+
+  .share-link input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+  }
+
+  .copy-btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: var(--primary-neon);
+    color: var(--bg-dark);
+    cursor: pointer;
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+</style>
+
+<!-- Create Post -->
+<div class="create-post">
+  <div class="post-input-wrapper">
+    <img
+      src="https://picsum.photos/200/200?random=1"
+      alt="User"
+      class="post-avatar"
+    />
+    <textarea class="post-input" placeholder="What's on your mind?"></textarea>
+  </div>
+  <div class="post-actions">
+    <div class="post-attachments">
+      <div class="post-attachment">
+        <i class="bx bx-image"></i>
+        <span>Image</span>
+      </div>
+      <div class="post-attachment">
+        <i class="bx bx-video"></i>
+        <span>Video</span>
+      </div>
+      <div class="post-attachment">
+        <i class="bx bx-link"></i>
+        <span>Link</span>
+      </div>
+      <div class="post-attachment">
+        <i class="bx bx-poll"></i>
+        <span>Poll</span>
+      </div>
+    </div>
+    <button class="post-button">Post</button>
+  </div>
+</div>
+
+<!-- Post Feed -->
+<div class="post">
+  <div class="post-header">
+    <img
+      src="https://picsum.photos/200/200?random=2"
+      alt="User"
+      class="post-avatar"
+    />
+    <div class="post-user-info">
+      <div class="post-username">CyberUser_42</div>
+      <div class="post-time">2 hours ago</div>
+    </div>
+    <div class="post-more">
+      <i class="bx bx-dots-horizontal-rounded"></i>
+    </div>
+  </div>
+  <div class="post-content">
+    Just finished my new neural implant prototype. The integration with the
+    limbic system is smooth, but still working on reducing the heat signature.
+    Any fellow hackers have suggestions? #CyberTech #Neuromods
+  </div>
+  <img
+    src="https://picsum.photos/800/400?random=1"
+    alt="Post Image"
+    class="post-image"
+  />
+  <div class="post-stats">
+    <span>128 reactions</span>
+    <span>42 comments</span>
+  </div>
+  <div class="post-buttons">
+    <div class="post-button-action">
+      <i class="bx bx-heart"></i>
+      <span>Like</span>
+    </div>
+    <div class="post-button-action">
+      <i class="bx bx-comment"></i>
+      <span>Comment</span>
+    </div>
+    <div class="post-button-action">
+      <i class="bx bx-share"></i>
+      <span>Share</span>
+    </div>
+  </div>
+
+  <div class="reaction-panel">
+    <button class="reaction-btn" data-reaction="like">
+      <i class="bx bx-heart"></i>
+      <span class="reaction-count">86</span>
+    </button>
+    <button class="reaction-btn" data-reaction="fire">
+      <i class="bx bxs-hot"></i>
+      <span class="reaction-count">32</span>
+    </button>
+    <button class="reaction-btn" data-reaction="wow">
+      <i class="bx bx-shocked"></i>
+      <span class="reaction-count">10</span>
+    </button>
+    <button class="reaction-btn" data-reaction="support">
+      <i class="bx bx-badge-check"></i>
+      <span class="reaction-count">0</span>
+    </button>
+  </div>
+
+  <div class="comments-section">
+    <div class="comment-input-wrapper">
+      <img
+        src="https://picsum.photos/200/200?random=1"
+        alt="User"
+        class="comment-avatar"
+      />
+      <textarea
+        class="comment-input"
+        placeholder="Write a comment..."
+      ></textarea>
+      <button class="post-button">
+        <i class="bx bx-send"></i>
+      </button>
+    </div>
+
+    <div class="comments-container">
+      <div class="comment">
+        <div class="comment-header">
+          <img
+            src="https://picsum.photos/200/200?random=3"
+            alt="User"
+            class="comment-avatar"
+          />
+          <span class="comment-user">NeoRunner</span>
+          <span class="comment-time">1 hour ago</span>
+        </div>
+        <div class="comment-content">
+          Have you tried the new carbon nanotubes for heat dissipation? They're
+          working great on my cerebral interface.
+        </div>
+        <div class="comment-actions">
+          <span class="comment-action">Like</span>
+          <span class="comment-action">Reply</span>
+          <span class="comment-action">Share</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="comment-header">
+          <img
+            src="https://picsum.photos/200/200?random=4"
+            alt="User"
+            class="comment-avatar"
+          />
+          <span class="comment-user">SynthWave_85</span>
+          <span class="comment-time">45 minutes ago</span>
+        </div>
+        <div class="comment-content">
+          This looks incredible! What's the data transfer rate you're getting?
+        </div>
+        <div class="comment-actions">
+          <span class="comment-action">Like</span>
+          <span class="comment-action">Reply</span>
+          <span class="comment-action">Share</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post">
+  <div class="post-header">
+    <img
+      src="https://picsum.photos/200/200?random=5"
+      alt="User"
+      class="post-avatar"
+    />
+    <div class="post-user-info">
+      <div class="post-username">NightCity_Fixer</div>
+      <div class="post-time">Yesterday</div>
+    </div>
+    <div class="post-more">
+      <i class="bx bx-dots-horizontal-rounded"></i>
+    </div>
+  </div>
+  <div class="post-content">
+    Downtown is lit tonight! The new holographic billboards are something else.
+    The city never sleeps, and neither do I. #NightCity #UrbanLights
+  </div>
+  <img
+    src="https://picsum.photos/800/400?random=2"
+    alt="Post Image"
+    class="post-image"
+  />
+  <div class="post-stats">
+    <span>256 reactions</span>
+    <span>78 comments</span>
+  </div>
+  <div class="post-buttons">
+    <div class="post-button-action">
+      <i class="bx bx-heart"></i>
+      <span>Like</span>
+    </div>
+    <div class="post-button-action">
+      <i class="bx bx-comment"></i>
+      <span>Comment</span>
+    </div>
+    <div class="post-button-action">
+      <i class="bx bx-share"></i>
+      <span>Share</span>
+    </div>
+  </div>
+
+  <div class="reaction-panel">
+    <button class="reaction-btn" data-reaction="like">
+      <i class="bx bx-heart"></i>
+      <span class="reaction-count">176</span>
+    </button>
+    <button class="reaction-btn" data-reaction="fire">
+      <i class="bx bxs-hot"></i>
+      <span class="reaction-count">65</span>
+    </button>
+    <button class="reaction-btn" data-reaction="wow">
+      <i class="bx bx-shocked"></i>
+      <span class="reaction-count">15</span>
+    </button>
+    <button class="reaction-btn" data-reaction="support">
+      <i class="bx bx-badge-check"></i>
+      <span class="reaction-count">0</span>
+    </button>
+  </div>
+
+  <div class="comments-section">
+    <div class="comment-input-wrapper">
+      <img
+        src="https://picsum.photos/200/200?random=1"
+        alt="User"
+        class="comment-avatar"
+      />
+      <textarea
+        class="comment-input"
+        placeholder="Write a comment..."
+      ></textarea>
+      <button class="post-button">
+        <i class="bx bx-send"></i>
+      </button>
+    </div>
+
+    <div class="comments-container">
+      <div class="comment">
+        <div class="comment-header">
+          <img
+            src="https://picsum.photos/200/200?random=6"
+            alt="User"
+            class="comment-avatar"
+          />
+          <span class="comment-user">ChromeEdge</span>
+          <span class="comment-time">15 hours ago</span>
+        </div>
+        <div class="comment-content">
+          The new ads for NeuroCorp are something else. I heard they're using
+          subliminal messaging tech now.
+        </div>
+        <div class="comment-actions">
+          <span class="comment-action">Like</span>
+          <span class="comment-action">Reply</span>
+          <span class="comment-action">Share</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Post Creation
+  document
+    .querySelector(".create-post .post-button")
+    .addEventListener("click", function () {
+      const input = document.querySelector(".post-input");
+      if (input.value.trim()) {
+        createPost(input.value);
+        input.value = "";
+      }
+    });
+
+  function createPost(content) {
+    const post = document.createElement("div");
+    post.className = "post";
+    post.innerHTML = `
+                <div class="post-header">
+                    <img src="https://picsum.photos/200/200?random=1" alt="User" class="post-avatar">
+                    <div class="post-user-info">
+                        <div class="post-username">You</div>
+                        <div class="post-time">Just now</div>
+                    </div>
+                    <div class="post-more">
+                        <i class='bx bx-dots-horizontal-rounded'></i>
+                    </div>
+                </div>
+                <div class="post-content">${content}</div>
+                <div class="post-stats">
+                    <span>0 reactions</span>
+                    <span>0 comments</span>
+                </div>
+                <div class="post-buttons">
+                    <div class="post-button-action">
+                        <i class='bx bx-heart'></i>
+                        <span>Like</span>
+                    </div>
+                    <div class="post-button-action">
+                        <i class='bx bx-comment'></i>
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-button-action">
+                        <i class='bx bx-share'></i>
+                        <span>Share</span>
+                    </div>
+                </div>
+
+                <div class="reaction-panel">
+                    <button class="reaction-btn" data-reaction="like">
+                        <i class='bx bx-heart'></i>
+                        <span class="reaction-count">0</span>
+                    </button>
+                    <button class="reaction-btn" data-reaction="fire">
+                        <i class='bx bxs-hot'></i>
+                        <span class="reaction-count">0</span>
+                    </button>
+                    <button class="reaction-btn" data-reaction="wow">
+                        <i class='bx bx-shocked'></i>
+                        <span class="reaction-count">0</span>
+                    </button>
+                    <button class="reaction-btn" data-reaction="support">
+                        <i class='bx bx-badge-check'></i>
+                        <span class="reaction-count">0</span>
+                    </button>
+                </div>
+
+                <div class="comments-section">
+                    <div class="comment-input-wrapper">
+                        <img src="https://picsum.photos/200/200?random=1" alt="User" class="comment-avatar">
+                        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+                        <button class="post-button">
+                            <i class='bx bx-send'></i>
+                        </button>
+                    </div>
+                    <div class="comments-container"></div>
+                </div>
+            `;
+
+    const currentView = document.querySelector(".content-view.active");
+    const createPost = currentView.querySelector(".create-post");
+
+    if (createPost) {
+      currentView.insertBefore(post, createPost.nextSibling);
+    } else {
+      currentView.insertBefore(post, currentView.firstChild.nextSibling);
+    }
+  }
+</script>
