@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dragonote | 登入</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../styles/main.css" />
+    <link rel="stylesheet" type="text/css" href="../styles/login.css" />
+  </head>
+  <body>
+    <div class="cyber-background"></div>
+    <div class="cyber-grid"></div>
+
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="logo">
+            <i class="bx bxs-dragon"></i>
+            <span class="neon-text">DRAGONOTE</span>
+          </div>
+          <h2>歡迎回來</h2>
+          <p>登入您的帳號以繼續</p>
+        </div>
+
+        <form class="login-form" id="loginForm">
+          <div class="form-group">
+            <label for="email">電子郵件</label>
+            <div class="input-group">
+              <i class="bx bx-envelope"></i>
+              <input
+                type="email"
+                id="email"
+                required
+                placeholder="輸入您的電子郵件"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">密碼</label>
+            <div class="input-group">
+              <i class="bx bx-lock-alt"></i>
+              <input
+                type="password"
+                id="password"
+                required
+                placeholder="輸入您的密碼"
+              />
+              <i class="bx bx-show-alt toggle-password"></i>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="remember" />
+              <span>記住我</span>
+            </label>
+            <a href="#" class="forgot-password">忘記密碼？</a>
+          </div>
+
+          <button type="submit" class="login-btn">
+            <span>登入</span>
+            <i class="bx bx-right-arrow-alt"></i>
+          </button>
+
+          <div class="social-login">
+            <p>或使用以下方式登入</p>
+            <div class="social-buttons">
+              <button type="button" class="social-btn google">
+                <i class="bx bxl-google"></i>
+                <span>Google</span>
+              </button>
+              <button type="button" class="social-btn facebook">
+                <i class="bx bxl-facebook"></i>
+                <span>Facebook</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="register-link">
+            還沒有帳號？ <a href="register.html">立即註冊</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../scripts/login.js"></script>
+  </body>
+</html>
